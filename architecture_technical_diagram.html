@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FASHAI — Technical Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; padding: 40px 20px; color: #c9d1d9; }
+
+  h1 { text-align: center; font-size: 24px; color: #fff; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #8b949e; font-size: 12px; margin-bottom: 32px; }
+
+  .canvas { max-width: 1150px; margin: 0 auto; position: relative; }
+
+  /* ── Regions ── */
+  .region {
+    border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px;
+    padding: 18px; margin-bottom: 16px; position: relative;
+    background: rgba(255,255,255,0.02);
+  }
+  .region-label {
+    position: absolute; top: -10px; left: 20px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; padding: 2px 10px; border-radius: 4px;
+  }
+
+  /* ── Node ── */
+  .node {
+    display: inline-flex; flex-direction: column; align-items: center;
+    padding: 12px 10px; border-radius: 10px; text-align: center;
+    min-width: 110px; max-width: 140px; position: relative;
+    transition: transform 0.15s;
+  }
+  .node:hover { transform: translateY(-2px); }
+  .node-icon { font-size: 28px; margin-bottom: 6px; }
+  .node-name { font-size: 11px; font-weight: 700; line-height: 1.3; }
+  .node-detail { font-size: 9px; color: #8b949e; line-height: 1.3; margin-top: 3px; }
+
+  /* Node colors */
+  .n-green { background: rgba(102,187,106,0.12); border: 1.5px solid rgba(102,187,106,0.4); color: #66bb6a; }
+  .n-blue { background: rgba(66,165,245,0.12); border: 1.5px solid rgba(66,165,245,0.4); color: #42a5f5; }
+  .n-orange { background: rgba(255,152,0,0.12); border: 1.5px solid rgba(255,152,0,0.4); color: #ff9800; }
+  .n-purple { background: rgba(171,71,188,0.12); border: 1.5px solid rgba(171,71,188,0.4); color: #ab47bc; }
+  .n-yellow { background: rgba(255,193,7,0.12); border: 1.5px solid rgba(255,193,7,0.4); color: #ffc107; }
+  .n-red { background: rgba(239,83,80,0.12); border: 1.5px solid rgba(239,83,80,0.4); color: #ef5350; }
+  .n-teal { background: rgba(38,198,218,0.12); border: 1.5px solid rgba(38,198,218,0.4); color: #26c6da; }
+  .n-gray { background: rgba(158,158,158,0.08); border: 1.5px dashed rgba(158,158,158,0.3); color: #9e9e9e; }
+
+  /* ── Flow rows ── */
+  .flow-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap; padding: 8px 0;
+  }
+  .flow-col {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+
+  /* ── Arrows ── */
+  .arr {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px; flex-shrink: 0;
+  }
+  .arr svg { display: block; }
+  .arr-down {
+    display: flex; align-items: center; justify-content: center;
+    padding: 4px 0; width: 100%;
+  }
+  .arr-down svg { display: block; margin: 0 auto; }
+
+  /* ── Parallel bracket ── */
+  .parallel-group {
+    display: flex; align-items: center; gap: 0;
+    border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;
+    padding: 8px 6px; position: relative;
+  }
+  .parallel-label {
+    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    font-size: 8px; color: #8b949e; background: #0d1117; padding: 0 6px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block; font-size: 8px; font-weight: 700;
+    padding: 1px 5px; border-radius: 3px; margin-top: 4px;
+  }
+  .tag-aws { background: #232f3e; color: #ff9900; }
+  .tag-bedrock { background: #1a1a3e; color: #ab47bc; }
+  .tag-offline { background: #333; color: #aaa; }
+
+  /* ── Section divider ── */
+  .divider {
+    text-align: center; padding: 10px 0; font-size: 10px; color: #484f58;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  /* ── Bottom legend ── */
+  .legend {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    margin-top: 20px; padding: 12px; border-radius: 8px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #8b949e; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* Arrow helper */
+  .arrow-r { color: #484f58; font-size: 20px; padding: 0 6px; }
+  .arrow-d { color: #484f58; font-size: 20px; padding: 4px 0; text-align: center; width: 100%; }
+</style>
+</head>
+<body>
+
+<h1>FASHAI — Technical Architecture</h1>
+<p class="subtitle">End-to-End AI Fashion Intelligence Pipeline on AWS (ap-south-1)</p>
+
+<div class="canvas">
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- ONLINE PIPELINE -->
+<!-- ══════════════════════════════════════════════ -->
+
+<!-- ROW 1: USER INPUT -->
+<div class="flow-row">
+  <div class="node n-green">
+    <div class="node-icon">📱</div>
+    <div class="node-name">User Input</div>
+    <div class="node-detail">Image / Text / Both<br>3 search modes</div>
+  </div>
+  <div class="arrow-r">→</div>
+  <div class="node n-orange">
+    <div class="node-icon">🌐</div>
+    <div class="node-name">AWS Amplify</div>
+    <div class="node-detail">Static hosting<br>index.html</div>
+    <span class="tag tag-aws">AWS</span>
+  </div>
+  <div class="arrow-r">→</div>
+  <div class="node n-blue">
+    <div class="node-icon">🔌</div>
+    <div class="node-name">API Gateway</div>
+    <div class="node-detail">REST /prod/search<br>CORS + JSON</div>
+    <span class="tag tag-aws">AWS</span>
+  </div>
+  <div class="arrow-r">→</div>
+  <div class="node n-blue">
+    <div class="node-icon">⚡</div>
+    <div class="node-name">AWS Lambda</div>
+    <div class="node-detail">query_pipeline.py<br>Orchestrator</div>
+    <span class="tag tag-aws">AWS</span>
+  </div>
+</div>
+
+<div class="arrow-d">↓</div>
+
+<!-- ROW 2: AI PROCESSING (parallel) -->
+<div class="region" style="border-color: rgba(171,71,188,0.3);">
+  <div class="region-label" style="background: #0d1117; color: #ab47bc;">Lambda calls AI services</div>
+  <div class="flow-row" style="gap: 12px;">
+
+    <!-- Rekognition -->
+    <div class="node n-purple">
+      <div class="node-icon">👁️</div>
+      <div class="node-name">Amazon Rekognition</div>
+      <div class="node-detail">DetectLabels API<br>>90% confidence<br>Garment | Pattern | Fabric</div>
+      <span class="tag tag-aws">AWS</span>
+    </div>
+
+    <!-- Gemma Vision -->
+    <div class="node n-purple">
+      <div class="node-icon">🧠</div>
+      <div class="node-name">Gemma 3 27B IT</div>
+      <div class="node-detail">Vision: structured attributes<br>Text: product imagination<br>Temperature: 0</div>
+      <span class="tag tag-bedrock">AMAZON BEDROCK</span>
+    </div>
+
+    <div class="arrow-r">→</div>
+
+    <div class="flow-col">
+      <div class="node n-teal" style="min-width: 180px; max-width: 220px;">
+        <div class="node-icon">📋</div>
+        <div class="node-name">Structured Query Text</div>
+        <div class="node-detail" style="text-align: left; font-size: 8px; line-height: 1.4;">
+          Color: Black · Pattern: Floral<br>
+          Material: Silk · Length: Midi<br>
+          Sleeve: Long · Silhouette: A-line<br>
+          Niche · Occasion · Season · Tags<br>
+          <em style="color:#26c6da;">↑ matches indexed format</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-r">→</div>
+
+    <!-- Titan Embedding -->
+    <div class="node n-yellow">
+      <div class="node-icon">🔢</div>
+      <div class="node-name">Amazon Titan<br>Embed Image V1</div>
+      <div class="node-detail">inputImage + inputText<br>or text-only<br>→ 1024-dim vector</div>
+      <span class="tag tag-bedrock">AMAZON BEDROCK</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="arrow-d">↓ query vector</div>
+
+<!-- ROW 3: SEARCH + RERANK -->
+<div class="region" style="border-color: rgba(239,83,80,0.3);">
+  <div class="region-label" style="background: #0d1117; color: #ef5350;">Search + Re-rank</div>
+  <div class="flow-row">
+    <div class="node n-red">
+      <div class="node-icon">🔍</div>
+      <div class="node-name">Amazon OpenSearch<br>Serverless</div>
+      <div class="node-detail">HNSW kNN search<br>+ BM25 (text-only)<br>Top 15 candidates</div>
+      <span class="tag tag-aws">AWS</span>
+    </div>
+    <div class="arrow-r">→ 15 products →</div>
+    <div class="node n-purple">
+      <div class="node-icon">🏆</div>
+      <div class="node-name">Cohere Rerank<br>V3.5</div>
+      <div class="node-detail">Cross-encoder<br>re-ranking<br>15 → Top 10</div>
+      <span class="tag tag-bedrock">AMAZON BEDROCK</span>
+    </div>
+    <div class="arrow-r">→ top 10 →</div>
+    <div class="node n-teal">
+      <div class="node-icon">📊</div>
+      <div class="node-name">Market Readiness</div>
+      <div class="node-detail">Score 0–100<br>Trend + Price +<br>Validation + Demand</div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-d">↓ top 5 products</div>
+
+<!-- ROW 4: INSIGHTS -->
+<div class="flow-row">
+  <div class="node n-purple">
+    <div class="node-icon">🧠</div>
+    <div class="node-name">Gemma 3 27B IT</div>
+    <div class="node-detail">Market intelligence<br>7-section report<br>+ Rekognition context</div>
+    <span class="tag tag-bedrock">AMAZON BEDROCK</span>
+  </div>
+  <div class="arrow-r">→</div>
+  <div class="node n-teal" style="max-width: 200px;">
+    <div class="node-icon">📈</div>
+    <div class="node-name">AI Intelligence Report</div>
+    <div class="node-detail">Trend | Price | Audience<br>Timing | Entry | Batch Size<br><strong style="color:#26c6da;">GO / CAUTION / NO GO</strong></div>
+  </div>
+  <div class="arrow-r">→</div>
+  <div class="node n-green">
+    <div class="node-icon">🖥️</div>
+    <div class="node-name">Frontend</div>
+    <div class="node-detail">Product cards<br>Readiness gauge<br>Intelligence report</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<div class="divider">── offline indexing pipeline (one-time) ──</div>
+<!-- ══════════════════════════════════════════════ -->
+
+<div class="region" style="border-color: rgba(158,158,158,0.2); border-style: dashed;">
+  <div class="region-label" style="background: #0d1117; color: #9e9e9e;">Pre-processing</div>
+  <div class="flow-row">
+    <div class="node n-gray">
+      <div class="node-icon">🗂️</div>
+      <div class="node-name">ASOS Dataset</div>
+      <div class="node-detail">5000 products<br>Images + metadata</div>
+    </div>
+    <div class="arrow-r" style="color: #555;">→</div>
+    <div class="node n-gray">
+      <div class="node-icon">🖼️</div>
+      <div class="node-name">Card Generator</div>
+      <div class="node-detail">Photo + text overlay<br>900x1080 PNG cards</div>
+    </div>
+    <div class="arrow-r" style="color: #555;">→</div>
+    <div class="node n-red">
+      <div class="node-icon">☁️</div>
+      <div class="node-name">Amazon S3</div>
+      <div class="node-detail">cards/ + metadata/<br>+ embeddings/</div>
+      <span class="tag tag-aws">AWS</span>
+    </div>
+    <div class="arrow-r" style="color: #555;">→</div>
+    <div class="node n-yellow">
+      <div class="node-icon">🔢</div>
+      <div class="node-name">Amazon Titan<br>Embed Image V1</div>
+      <div class="node-detail">Card image + metadata<br>→ 1024-dim hybrid vector</div>
+      <span class="tag tag-bedrock">AMAZON BEDROCK</span>
+    </div>
+    <div class="arrow-r" style="color: #555;">→</div>
+    <div class="node n-red">
+      <div class="node-icon">🔍</div>
+      <div class="node-name">Amazon OpenSearch<br>Serverless</div>
+      <div class="node-detail">HNSW index<br>5000 vectors<br>Cosine similarity</div>
+      <span class="tag tag-aws">AWS</span>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(102,187,106,0.3); border: 1px solid #66bb6a;"></div>
+    Client
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(66,165,245,0.3); border: 1px solid #42a5f5;"></div>
+    API / Compute
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(171,71,188,0.3); border: 1px solid #ab47bc;"></div>
+    AI / ML
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(255,193,7,0.3); border: 1px solid #ffc107;"></div>
+    Embeddings
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(239,83,80,0.3); border: 1px solid #ef5350;"></div>
+    Data Storage
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(38,198,218,0.3); border: 1px solid #26c6da;"></div>
+    Output
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: rgba(158,158,158,0.15); border: 1px dashed #9e9e9e;"></div>
+    Offline
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FASHAI — Fashion Design Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:      #13151F;
+      --bg2:     #1C1F2E;
+      --bg3:     #252840;
+      --lime:    #C8F135;
+      --lime-dk: #A0C020;
+      --purple:  #C4A8F8;
+      --purple2: #9F7AEA;
+      --orange:  #FF9900;
+      --white:   #FFFFFF;
+      --w70:     rgba(255,255,255,0.7);
+      --w40:     rgba(255,255,255,0.4);
+      --w10:     rgba(255,255,255,0.07);
+      --w5:      rgba(255,255,255,0.03);
+      --teal:    #00C9A7;
+      --red:     #FC8181;
+      --gold:    #F6E05E;
+      --border:  rgba(255,255,255,0.1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+    body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(200,241,53,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(200,241,53,.022) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0}
+
+    .orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0}
+    .orb1{width:600px;height:600px;background:rgba(200,241,53,.055);top:-200px;left:-200px}
+    .orb2{width:500px;height:500px;background:rgba(196,168,248,.06);bottom:-150px;right:-150px}
+    .orb3{width:350px;height:350px;background:rgba(255,153,0,.04);top:35%;left:55%}
+
+    .ticker{background:var(--lime);color:var(--bg);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:7px 0;overflow:hidden;white-space:nowrap;letter-spacing:.1em;position:relative;z-index:10}
+    .ticker-inner{display:inline-block;animation:tick 40s linear infinite}
+    @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;border-bottom:1px solid var(--border);background:rgba(19,21,31,.92);backdrop-filter:blur(14px)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo-icon{width:38px;height:38px;background:var(--lime);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .logo-text{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;letter-spacing:-1px}
+    .logo-text span{color:var(--lime)}
+    .nav-pill{border:1px solid var(--purple);color:var(--purple);font-family:'Space Mono',monospace;font-size:10px;padding:6px 16px;border-radius:999px;letter-spacing:.08em}
+    .nav-aws{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--w40)}
+    .aws-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;animation:blink 2s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+
+    .hero{position:relative;z-index:1;text-align:center;padding:72px 48px 36px;overflow:hidden}
+    .hero-bg{position:absolute;top:0;right:0;width:55%;height:100%;pointer-events:none;z-index:-1;overflow:hidden}
+    .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:top center;opacity:.18;filter:saturate(1.2)}
+    .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 30%,transparent 70%,var(--bg) 100%)}
+    .hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,var(--bg) 0%,transparent 15%,transparent 80%,var(--bg) 100%);z-index:1}
+    .hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:10px}
+    .hero-tag::before,.hero-tag::after{content:'';width:60px;height:1px;background:var(--lime);opacity:.45}
+    .hero-h1{font-size:54px;font-weight:800;letter-spacing:-2.5px;line-height:1.05;margin-bottom:16px}
+    .hero-h1 em{font-style:normal;color:var(--lime)}
+    .hero-p{font-size:15px;color:var(--w70);max-width:520px;margin:0 auto 28px;line-height:1.65}
+    .chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .chip{display:flex;align-items:center;gap:6px;background:var(--w10);border:1px solid var(--border);border-radius:999px;padding:7px 14px;font-size:12px;color:var(--w70)}
+    .cdot{width:6px;height:6px;border-radius:50%}
+
+
+    main{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:48px 48px 80px}
+
+    .slabel{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .snum{width:26px;height:26px;background:var(--lime);color:var(--bg);border-radius:50%;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .stxt{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--w40)}
+
+    /* ── UPLOAD GRID ── */
+    .ugrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:22px}
+    .ucard{background:var(--bg2);border:1.5px dashed var(--border);border-radius:18px;overflow:hidden;cursor:default;min-height:295px;transition:all .3s;position:relative}
+    .ucard:hover{border-color:var(--lime);border-style:solid;background:rgba(200,241,53,.03);transform:translateY(-2px);box-shadow:0 18px 56px rgba(200,241,53,.09)}
+    .ucard.filled{border-style:solid;border-color:var(--purple2);background:rgba(159,122,234,.05)}
+    .ucard.filled .uarea{padding:8px}
+    .ucard-hd{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .ucard-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--w40);letter-spacing:.1em}
+    .ubadge{font-family:'Space Mono',monospace;font-size:9px;padding:4px 12px;border-radius:999px}
+    .ub-p{background:rgba(200,241,53,.15);color:var(--lime);border:1px solid rgba(200,241,53,.3)}
+    .ub-c{background:rgba(196,168,248,.15);color:var(--purple);border:1px solid rgba(196,168,248,.3)}
+    .uarea{padding:36px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;text-align:center;overflow:hidden}
+    .uicon{width:200px;height:200px;background:var(--bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;border:1px solid var(--border);overflow:hidden;padding:4px;cursor:pointer;transition:all .2s}
+    .uicon:hover{border-color:var(--lime);box-shadow:0 8px 30px rgba(200,241,53,.12);transform:translateY(-2px)}
+    .uicon img{width:100%;height:100%;object-fit:contain}
+    .utxt{font-size:14px;font-weight:600;margin-bottom:5px}
+    .uhint{font-size:12px;color:var(--w40)}
+    .uprev{width:100%;height:300px;object-fit:contain;display:block}
+    .ufname{padding:9px 20px;font-family:'Space Mono',monospace;font-size:10px;color:var(--w40);border-top:1px solid var(--border);background:var(--w5)}
+    input[type=file]{display:none}
+
+    /* ── REMOVE BUTTON ── */
+    .btn-remove{position:absolute;top:11px;right:11px;width:26px;height:26px;background:rgba(200,241,53,.15);border:1px solid rgba(200,241,53,.4);border-radius:50%;color:var(--lime);font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:all .2s;line-height:1}
+    .btn-remove:hover{background:rgba(200,241,53,.3);transform:scale(1.1)}
+    .ucard.filled .btn-remove{display:flex}
+
+    .drow{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px}
+    .dlbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--w40);margin-bottom:7px;display:block}
+    .dinp{width:100%;padding:13px 16px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;color:var(--white);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+    .dinp::placeholder{color:var(--w40)}
+    .dinp:focus{border-color:var(--purple);background:rgba(159,122,234,.04)}
+
+    .arow{display:flex;gap:12px;margin-bottom:6px}
+    .btn-go{background:var(--lime);color:var(--bg);border:none;padding:10px 32px;border-radius:10px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s}
+    .btn-go:hover:not(:disabled){background:var(--lime-dk);transform:translateY(-1px);box-shadow:0 8px 30px rgba(200,241,53,.3)}
+    .btn-go:disabled{opacity:.38;cursor:not-allowed}
+    .btn-cl{background:transparent;color:var(--w40);border:1.5px solid var(--border);padding:15px 26px;border-radius:12px;font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s}
+    .btn-cl:hover{border-color:var(--w40);color:var(--white)}
+
+    .lbar{height:2px;background:var(--w10);border-radius:999px;overflow:hidden;display:none;margin-bottom:8px}
+    .lbar.on{display:block}
+    .lbar-i{height:100%;background:linear-gradient(90deg,var(--lime),var(--purple),var(--orange));animation:slide 1.5s ease-in-out infinite;width:40%}
+    @keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+    .lstate{text-align:center;padding:60px 44px;display:none}
+    .lstate.on{display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .lspin{font-size:52px;animation:spin-slow 3s linear infinite;margin-bottom:22px;display:inline-block}
+    .lmsg{font-family:'Space Mono',monospace;font-size:13px;color:var(--w70);letter-spacing:.06em}
+    .lsub{font-family:'Space Mono',monospace;font-size:10px;color:var(--w40);margin-top:10px;letter-spacing:.1em}
+    .lfashion-dots{display:flex;gap:10px;margin-top:18px}
+    .lfashion-dots span{width:8px;height:8px;border-radius:50%;animation:dp 1.4s ease-in-out infinite}
+    .lfashion-dots span:nth-child(1){background:var(--lime);animation-delay:0s}
+    .lfashion-dots span:nth-child(2){background:var(--purple);animation-delay:.2s}
+    .lfashion-dots span:nth-child(3){background:var(--orange);animation-delay:.4s}
+    .lfashion-dots span:nth-child(4){background:var(--teal);animation-delay:.6s}
+    @keyframes dp{0%,80%,100%{transform:scale(.8);opacity:.4}40%{transform:scale(1.2);opacity:1}}
+
+    .err{background:rgba(252,129,129,.07);border:1px solid rgba(252,129,129,.3);border-radius:12px;padding:14px 18px;margin-bottom:28px;font-family:'Space Mono',monospace;font-size:12px;color:var(--red);display:none}
+    .err.on{display:block}
+
+    .results{display:none;animation:fu .5s ease forwards;padding-top:2px}
+    .results.on{display:block}
+    @keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── METRICS ── */
+    .mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:44px}
+    .mcard{border-radius:16px;padding:22px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
+    .mcard:nth-child(1){background:var(--lime);color:var(--bg)}
+    .mcard:nth-child(2){background:rgba(196,168,248,.2);border:1px solid rgba(196,168,248,.3);color:var(--white)}
+    .mcard:nth-child(3){background:rgba(255,153,0,.15);border:1px solid rgba(255,153,0,.3);color:var(--white)}
+    .mcard:nth-child(4){background:rgba(0,201,167,.12);border:1px solid rgba(0,201,167,.3);color:var(--white)}
+    .mcard:nth-child(5){background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--white);text-align:left;padding:18px 20px}
+    .mcard:hover{transform:translateY(-2px)}
+    .mlbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-bottom:10px}
+    .mval{font-size:32px;font-weight:800;line-height:1;margin-bottom:5px;letter-spacing:-1px}
+    .msub{font-size:11px;opacity:.6}
+    .tbar-row{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+    .tbar-lbl{width:52px;font-family:'Space Mono',monospace;font-size:9px;opacity:.75;flex-shrink:0}
+    .tbar-track{flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden}
+    .tbar-fill{height:100%;border-radius:999px;transition:width 1.2s ease}
+    .tbar-pct{font-family:'Space Mono',monospace;font-size:9px;opacity:.65;flex-shrink:0;width:28px;text-align:right}
+
+    /* ── SINGLE MODE PRODUCTS ── */
+    .ptitle{font-size:20px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+    .pcnt{font-family:'Space Mono',monospace;font-size:10px;background:rgba(200,241,53,.15);color:var(--lime);border:1px solid rgba(200,241,53,.3);padding:4px 12px;border-radius:999px}
+    .pgrid-wrap{position:relative;margin-bottom:24px}
+    .pgrid{display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:8px;-ms-overflow-style:none;scrollbar-width:none}
+    .pgrid::-webkit-scrollbar{display:none}
+    .pgrid .pcard{min-width:220px;max-width:220px;flex-shrink:0}
+    .pscroll-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);color:var(--white);font-size:16px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .pscroll-btn:hover{background:var(--lime);color:var(--bg);border-color:var(--lime)}
+    .pscroll-btn.left{left:-18px}
+    .pscroll-btn.right{right:-18px}
+    .pcard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;cursor:pointer;animation:fu .5s ease forwards;opacity:0}
+    .pcard:nth-child(1){animation-delay:.08s}.pcard:nth-child(2){animation-delay:.12s}
+    .pcard:nth-child(3){animation-delay:.16s}.pcard:nth-child(4){animation-delay:.20s}
+    .pcard:nth-child(5){animation-delay:.24s}.pcard:nth-child(6){animation-delay:.28s}
+    .pcard:nth-child(7){animation-delay:.32s}.pcard:nth-child(8){animation-delay:.36s}
+    .pcard:nth-child(9){animation-delay:.40s}.pcard:nth-child(10){animation-delay:.44s}
+    .pcard:nth-child(11){animation-delay:.48s}.pcard:nth-child(12){animation-delay:.52s}
+    .pcard:nth-child(13){animation-delay:.56s}.pcard:nth-child(14){animation-delay:.60s}
+    .pcard:nth-child(15){animation-delay:.64s}
+    .pcard:hover{transform:translateY(-4px);border-color:var(--purple2);box-shadow:0 14px 44px rgba(159,122,234,.18)}
+    .pimg-w{position:relative;height:220px;background:var(--bg3);overflow:hidden}
+    .prank{position:absolute;top:8px;left:8px;background:var(--bg);color:var(--lime);font-family:'Space Mono',monospace;font-size:9px;padding:3px 7px;border-radius:6px;z-index:1;border:1px solid rgba(200,241,53,.3)}
+    .pimg{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s}
+    .pcard:hover .pimg{transform:scale(1.05)}
+    .psbar{height:2px;background:var(--w10)}
+    .psfill{height:100%;background:linear-gradient(90deg,var(--lime),var(--purple));transition:width 1s}
+    .pinfo{padding:13px}
+    .pname{font-size:11px;font-weight:600;line-height:1.4;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .pprice{font-size:19px;font-weight:800;color:var(--lime);margin-bottom:7px;letter-spacing:-.5px}
+    .ptags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px}
+    .ptag{font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:999px}
+    .t-n{background:rgba(196,168,248,.15);color:var(--purple);border:1px solid rgba(196,168,248,.25)}
+    .t-r{background:rgba(200,241,53,.12);color:var(--lime);border:1px solid rgba(200,241,53,.25)}
+    .t-f{background:rgba(252,129,129,.12);color:var(--red);border:1px solid rgba(252,129,129,.25)}
+    .t-s{background:rgba(255,153,0,.12);color:var(--orange);border:1px solid rgba(255,153,0,.25)}
+    .prat{display:flex;align-items:center;gap:5px}
+    .stars{color:var(--gold);font-size:10px}
+    .rnum{font-family:'Space Mono',monospace;font-size:10px;color:var(--w40)}
+
+    /* ── COMPARE METRIC OVERVIEW ── */
+    .compare-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+    .compare-mcol-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:14px;padding-bottom:10px}
+    .compare-mcol-hd.d1{border-bottom:2px solid rgba(200,241,53,.4)}
+    .compare-mcol-hd.d2{border-bottom:2px solid rgba(196,168,248,.4)}
+    .compare-mcards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .cmcard{border-radius:14px;padding:16px;text-align:center}
+    .cmcard.c1{background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.2)}
+    .cmcard.c2{background:rgba(196,168,248,.07);border:1px solid rgba(196,168,248,.2)}
+    .cmcard .mlbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.65;margin-bottom:8px}
+    .cmcard .mval{font-size:22px;font-weight:800;line-height:1;margin-bottom:4px;letter-spacing:-.5px}
+    .cmcard.c1 .mval{color:var(--lime)}
+    .cmcard.c2 .mval{color:var(--purple)}
+    .cmcard .msub{font-size:10px;opacity:.5}
+    .ctrend{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:44px}
+
+    /* ── COMPARE MODE PRODUCTS ── */
+    .compare-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:44px}
+    .compare-col{max-height:520px;overflow-y:auto;scroll-behavior:smooth;padding-right:4px}
+    .compare-col::-webkit-scrollbar{width:4px}
+    .compare-col::-webkit-scrollbar-track{background:var(--w5);border-radius:4px}
+    .compare-col::-webkit-scrollbar-thumb{background:var(--w10);border-radius:4px}
+    .compare-col::-webkit-scrollbar-thumb:hover{background:var(--w40)}
+    .compare-col-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border)}
+    .compare-col-hd.d1{border-color:rgba(200,241,53,.4)}
+    .compare-col-hd.d2{border-color:rgba(196,168,248,.4)}
+    .col-label{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+    .col-label .design-dot{width:8px;height:8px;border-radius:50%}
+    .d1 .design-dot{background:var(--lime)}
+    .d2 .design-dot{background:var(--purple)}
+    .col-cnt{font-family:'Space Mono',monospace;font-size:9px;padding:3px 10px;border-radius:999px}
+    .d1 .col-cnt{background:rgba(200,241,53,.15);color:var(--lime);border:1px solid rgba(200,241,53,.3)}
+    .d2 .col-cnt{background:rgba(196,168,248,.15);color:var(--purple);border:1px solid rgba(196,168,248,.3)}
+
+    /* compact horizontal product card for compare mode */
+    .cpcard{display:flex;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:all .3s;cursor:pointer;animation:fu .4s ease forwards;opacity:0}
+    .cpcard:nth-child(1){animation-delay:.06s}.cpcard:nth-child(2){animation-delay:.12s}
+    .cpcard:nth-child(3){animation-delay:.18s}.cpcard:nth-child(4){animation-delay:.24s}
+    .cpcard:nth-child(5){animation-delay:.30s}.cpcard:nth-child(6){animation-delay:.36s}
+    .cpcard:nth-child(7){animation-delay:.42s}.cpcard:nth-child(8){animation-delay:.48s}
+    .cpcard:nth-child(9){animation-delay:.54s}.cpcard:nth-child(10){animation-delay:.60s}
+    .cpcard:nth-child(11){animation-delay:.66s}.cpcard:nth-child(12){animation-delay:.72s}
+    .cpcard:nth-child(13){animation-delay:.78s}.cpcard:nth-child(14){animation-delay:.84s}
+    .cpcard:nth-child(15){animation-delay:.90s}
+    .cpcard:hover{border-color:var(--purple2);transform:translateX(3px);box-shadow:0 6px 24px rgba(159,122,234,.15)}
+    .cpimg-w{width:78px;min-width:78px;height:90px;background:var(--bg3);position:relative;overflow:hidden}
+    .cpimg{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .3s}
+    .cpcard:hover .cpimg{transform:scale(1.06)}
+    .cprank{position:absolute;top:4px;left:4px;font-family:'Space Mono',monospace;font-size:8px;background:var(--bg);color:var(--lime);padding:2px 5px;border-radius:4px;border:1px solid rgba(200,241,53,.3)}
+    .cpinfo{flex:1;padding:10px 10px 10px 0;display:flex;flex-direction:column;justify-content:space-between}
+    .cpname{font-size:11px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .cpbottom{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+    .cpprice{font-size:14px;font-weight:800;color:var(--lime)}
+    .cpscore{font-family:'Space Mono',monospace;font-size:9px;color:var(--w40)}
+    .cpsbar{height:2px;background:var(--w10);border-radius:999px;margin-top:6px}
+    .cpsfill{height:100%;background:linear-gradient(90deg,var(--lime),var(--purple));border-radius:999px;transition:width 1s}
+
+    /* ── INSIGHTS ── */
+    .ipanel{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:38px;margin-bottom:44px;position:relative;overflow:hidden}
+    .ipanel::before{content:'';position:absolute;top:-70px;right:-70px;width:280px;height:280px;background:radial-gradient(circle,rgba(196,168,248,.1) 0%,transparent 70%);pointer-events:none}
+    .ipanel::after{content:'';position:absolute;bottom:-50px;left:80px;width:180px;height:180px;background:radial-gradient(circle,rgba(200,241,53,.06) 0%,transparent 70%);pointer-events:none}
+    .ihd{display:flex;align-items:center;gap:14px;margin-bottom:28px;position:relative;z-index:1}
+    .iicon{width:46px;height:46px;background:rgba(196,168,248,.15);border:1px solid rgba(196,168,248,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .ititle{font-size:20px;font-weight:700}
+    .isub{font-size:11px;color:var(--w40);margin-top:3px;font-family:'Space Mono',monospace}
+    .isec{margin-bottom:14px;padding:16px 20px;background:var(--w10);border-radius:14px;border-left:3px solid var(--purple);position:relative;z-index:1;border:1px solid rgba(196,168,248,.15);border-left:3px solid var(--purple)}
+    .isec.vgo{border-left-color:var(--lime);background:rgba(200,241,53,.05);border-color:rgba(200,241,53,.2)}
+    .isec.vwarn{border-left-color:var(--orange);background:rgba(255,153,0,.05);border-color:rgba(255,153,0,.2)}
+    .isec.vno{border-left-color:var(--red);background:rgba(252,129,129,.05);border-color:rgba(252,129,129,.2)}
+    .isec-ttl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin-bottom:7px}
+    .isec.vgo .isec-ttl{color:var(--lime)}.isec.vwarn .isec-ttl{color:var(--orange)}.isec.vno .isec-ttl{color:var(--red)}
+    .isec-body{font-size:13px;line-height:1.7;color:var(--w70)}
+
+    /* compare mode insight badge */
+    .compare-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(196,168,248,.12);border:1px solid rgba(196,168,248,.3);border-radius:999px;padding:4px 12px;font-family:'Space Mono',monospace;font-size:9px;color:var(--purple);letter-spacing:.08em}
+
+    /* ── VISUAL ATTRIBUTES ── */
+    .va-section{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:28px}
+    .va-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w40);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .va-title::after{content:'';flex:1;height:1px;background:var(--border)}
+    .va-group{margin-bottom:12px}
+    .va-group:last-child{margin-bottom:0}
+    .va-group-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--w40);margin-bottom:8px;padding-left:4px}
+    .va-chips{display:flex;flex-wrap:wrap;gap:7px}
+    .va-chip{display:inline-flex;align-items:center;gap:6px;border-radius:8px;padding:5px 12px;font-size:11.5px;font-weight:500;transition:all .3s;animation:card-in .4s ease forwards;opacity:0;border:1px solid transparent}
+    .va-chip:hover{transform:translateY(-1px);filter:brightness(1.2)}
+    .va-chip .va-conf{font-family:'Space Mono',monospace;font-size:8.5px;color:var(--w40);margin-left:3px}
+    .va-style-desc{font-size:12.5px;color:var(--w70);margin-bottom:12px;padding:14px 18px;background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.15);border-radius:10px;line-height:1.8;white-space:pre-line;font-family:'Space Mono',monospace}
+    .va-style-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+    .va-chip.va-garment{background:rgba(200,241,53,.1);border-color:rgba(200,241,53,.2);color:var(--lime)}
+    .va-chip.va-pattern{background:rgba(255,153,0,.1);border-color:rgba(255,153,0,.2);color:var(--orange)}
+    .va-chip.va-fabric{background:rgba(0,201,167,.1);border-color:rgba(0,201,167,.2);color:var(--teal)}
+    .va-chip.va-detail{background:rgba(246,224,94,.08);border-color:rgba(246,224,94,.18);color:var(--gold)}
+
+    /* ── MARKET READINESS GAUGE ── */
+    .mr-section{margin-bottom:32px}
+    .mr-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;display:flex;gap:36px;align-items:center}
+    .mr-gauge{position:relative;width:140px;height:140px;flex-shrink:0}
+    .mr-gauge svg{transform:rotate(-90deg)}
+    .mr-gauge-bg{fill:none;stroke:var(--w10);stroke-width:8}
+    .mr-gauge-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease}
+    .mr-score{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .mr-score-num{font-size:36px;font-weight:800;letter-spacing:-2px;line-height:1}
+    .mr-score-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--w40);margin-top:4px}
+    .mr-details{flex:1}
+    .mr-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--w40);margin-bottom:16px}
+    .mr-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .mr-bar-lbl{width:90px;font-family:'Space Mono',monospace;font-size:10px;color:var(--w70);flex-shrink:0}
+    .mr-bar-track{flex:1;height:8px;background:var(--w10);border-radius:999px;overflow:hidden}
+    .mr-bar-fill{height:100%;border-radius:999px;transition:width 1.2s ease}
+    .mr-bar-val{font-family:'Space Mono',monospace;font-size:10px;color:var(--w40);width:32px;text-align:right;flex-shrink:0}
+
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:22px 48px;display:flex;align-items:center;justify-content:space-between;background:var(--bg2)}
+    .fl{font-family:'Space Mono',monospace;font-size:11px;color:var(--w40)}
+    .fl span{color:var(--lime)}
+    .fr{display:flex;gap:8px}
+    .fc{font-family:'Space Mono',monospace;font-size:10px;padding:4px 12px;border-radius:999px;border:1px solid var(--border);color:var(--w40)}
+
+    /* ── FASHION ANIMATIONS ── */
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+    @keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(-2deg)}}
+    @keyframes glow-pulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}}
+    @keyframes runway-sweep{0%{left:-30%;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:130%;opacity:0}}
+    @keyframes stitch-march{0%{background-position:0 0}100%{background-position:40px 0}}
+    @keyframes border-glow{0%,100%{border-color:rgba(200,241,53,.15);box-shadow:0 0 0 rgba(200,241,53,0)}50%{border-color:rgba(200,241,53,.4);box-shadow:0 0 18px rgba(200,241,53,.08)}}
+    @keyframes spin-slow{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    @keyframes card-in{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+    /* ── CUSTOM SCROLLBAR ── */
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:rgba(200,241,53,.18);border-radius:999px}
+    ::-webkit-scrollbar-thumb:hover{background:rgba(200,241,53,.35)}
+
+    /* ── FASHION FLOATING ACCENTS ── */
+    .fashion-accent{position:fixed;pointer-events:none;z-index:0;opacity:.08;font-size:28px;color:var(--lime)}
+    .fa1{top:18%;left:3%;animation:float 7s ease-in-out infinite}
+    .fa2{top:42%;right:2%;animation:float2 9s ease-in-out infinite;color:var(--purple);font-size:24px}
+    .fa3{bottom:22%;left:5%;animation:float 11s ease-in-out infinite;animation-delay:1s;font-size:22px}
+    .fa4{top:12%;right:8%;animation:float2 8s ease-in-out infinite;animation-delay:2s;color:var(--orange);font-size:20px}
+    .fa5{bottom:35%;right:4%;animation:float 10s ease-in-out infinite;animation-delay:3s;font-size:26px}
+
+    /* ── RUNWAY DIVIDER ── */
+    .runway{position:relative;height:2px;background:rgba(255,255,255,.04);margin:0 48px;overflow:hidden;z-index:1}
+    .runway::before{content:'';position:absolute;top:0;left:-30%;width:30%;height:100%;background:linear-gradient(90deg,transparent,var(--lime),var(--purple),transparent);animation:runway-sweep 4s ease-in-out infinite;border-radius:999px;box-shadow:0 0 20px rgba(200,241,53,.4)}
+
+    /* ── HERO GLOW ── */
+    .hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:220px;background:radial-gradient(ellipse,rgba(200,241,53,.08) 0%,rgba(196,168,248,.04) 40%,transparent 70%);pointer-events:none;animation:glow-pulse 4s ease-in-out infinite;z-index:-1}
+    .hero-h1 em{background:linear-gradient(90deg,var(--lime),#e0ff80,var(--lime));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+
+    /* ── STITCH BORDER ON ACTION ROW ── */
+    .arow{position:relative;padding:18px 0;margin-bottom:44px}
+    .arow::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,var(--lime) 0,var(--lime) 6px,transparent 6px,transparent 12px);opacity:.2;animation:stitch-march 2s linear infinite}
+    .arow::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,var(--purple) 0,var(--purple) 6px,transparent 6px,transparent 12px);opacity:.2;animation:stitch-march 2s linear infinite reverse}
+
+    /* ── BUTTON SHIMMER ── */
+    .btn-go{position:relative;overflow:hidden}
+    .btn-go::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transition:none}
+    .btn-go:not(:disabled)::after{animation:shimmer 3s ease-in-out infinite}
+
+    /* ── UPLOAD CARD ENHANCEMENTS ── */
+    .ucard{animation:border-glow 3s ease-in-out infinite}
+    .ucard.filled{animation:none}
+    .ucard::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 10px,rgba(200,241,53,.012) 10px,rgba(200,241,53,.012) 11px);pointer-events:none;z-index:0;transition:opacity .3s}
+    .ucard.filled::before{opacity:0}
+    .ucard:hover{transform:translateY(-3px) scale(1.008)}
+
+    /* ── METRIC CARD GLASSMORPHISM ── */
+    .mcard{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:card-in .5s ease forwards;opacity:0}
+    .mcard:nth-child(1){animation-delay:.05s}.mcard:nth-child(2){animation-delay:.1s}.mcard:nth-child(3){animation-delay:.15s}.mcard:nth-child(4){animation-delay:.2s}.mcard:nth-child(5){animation-delay:.25s}
+    .mcard::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,transparent 50%);border-radius:16px;pointer-events:none}
+
+    /* ── INSIGHTS PANEL LOOKBOOK FRAME ── */
+    .ipanel{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .ipanel .ihd::before{content:'';position:absolute;top:-8px;left:-8px;width:20px;height:20px;border-top:2px solid var(--purple);border-left:2px solid var(--purple);opacity:.4;pointer-events:none}
+    .ipanel .ihd::after{content:'';position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-top:2px solid var(--lime);border-right:2px solid var(--lime);opacity:.4;pointer-events:none}
+
+    /* ── LOGO PULSE ── */
+    .logo-icon{animation:glow-pulse 3s ease-in-out infinite;box-shadow:0 0 20px rgba(200,241,53,.15)}
+
+    /* ── FOOTER GRADIENT ── */
+    footer{background:linear-gradient(to bottom,var(--bg2),rgba(19,21,31,1))}
+    footer::before{content:'';position:absolute;top:-40px;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,var(--bg2));pointer-events:none}
+    footer{position:relative}
+
+    /* ── PRODUCT CARD SHINE ── */
+    .pcard::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 40%);pointer-events:none;border-radius:16px}
+
+    /* ── CHIP HOVER EFFECT ── */
+    .chip{transition:all .2s}
+    .chip:hover{transform:translateY(-2px);border-color:var(--lime);box-shadow:0 4px 16px rgba(200,241,53,.1)}
+
+    /* ── SECTION NUMBER PULSE ── */
+    .snum{box-shadow:0 0 0 0 rgba(200,241,53,.3);animation:glow-pulse 3s ease-in-out infinite}
+
+    /* ── LIGHTBOX ── */
+    .lightbox{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);cursor:pointer}
+    .lightbox.on{display:flex}
+    .lightbox-inner{position:relative;max-width:90vw;max-height:85vh;animation:lb-in .35s cubic-bezier(.16,1,.3,1) forwards}
+    @keyframes lb-in{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .lightbox-inner img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(200,241,53,.15)}
+    .lb-name{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:11px;color:var(--w70);white-space:nowrap;background:var(--bg2);padding:6px 16px;border-radius:999px;border:1px solid var(--border)}
+    .lb-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;background:var(--bg);border:1px solid var(--border);border-radius:50%;color:var(--lime);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;z-index:1}
+    .lb-close:hover{background:rgba(200,241,53,.15);transform:scale(1.1)}
+    .lb-price{position:absolute;top:12px;left:12px;background:var(--bg);color:var(--lime);font-family:'Space Mono',monospace;font-size:14px;font-weight:700;padding:6px 14px;border-radius:10px;border:1px solid rgba(200,241,53,.3)}
+
+    @media(max-width:900px){
+      main,nav,footer{padding-left:20px;padding-right:20px}
+      .ugrid,.drow{grid-template-columns:1fr}
+      .pgrid .pcard{min-width:160px;max-width:160px}
+      .mgrid{grid-template-columns:repeat(3,1fr)}
+      .compare-cols{grid-template-columns:1fr}
+      .hero-h1{font-size:34px}
+      .ipanel{padding:22px}
+      .runway{margin:0 20px}
+      .fashion-accent{display:none}
+      .hero-bg{display:none}
+    }
+  </style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+
+<div class="ticker">
+  <span class="ticker-inner">
+    ✦ AI FOR BHARAT HACKATHON &nbsp;&nbsp; ✦ POWERED BY AWS &nbsp;&nbsp; ✦ AMAZON BEDROCK &nbsp;&nbsp; ✦ TITAN MULTIMODAL EMBEDDINGS &nbsp;&nbsp; ✦ OPENSEARCH SERVERLESS &nbsp;&nbsp; ✦ AMAZON REKOGNITION &nbsp;&nbsp; ✦ GEMMA 3 27B &nbsp;&nbsp; ✦ COHERE RERANK V3.5 &nbsp;&nbsp; ✦ AWS LAMBDA &nbsp;&nbsp; ✦ AMAZON S3 &nbsp;&nbsp; ✦ API GATEWAY &nbsp;&nbsp; ✦ TEAM COOL CODER PRO &nbsp;&nbsp; ✦ AI FOR BHARAT HACKATHON &nbsp;&nbsp; ✦ POWERED BY AWS &nbsp;&nbsp; ✦ AMAZON BEDROCK &nbsp;&nbsp; ✦ TITAN MULTIMODAL EMBEDDINGS &nbsp;&nbsp; ✦ OPENSEARCH SERVERLESS &nbsp;&nbsp; ✦ AMAZON REKOGNITION &nbsp;&nbsp; ✦ GEMMA 3 27B &nbsp;&nbsp; ✦ COHERE RERANK V3.5 &nbsp;&nbsp; ✦ AWS LAMBDA &nbsp;&nbsp; ✦ AMAZON S3 &nbsp;&nbsp; ✦ API GATEWAY &nbsp;&nbsp; ✦ TEAM COOL CODER PRO &nbsp;&nbsp;
+  </span>
+</div>
+
+<nav>
+  <div class="logo">
+    <div class="logo-text">FASH<span>AI</span></div>
+  </div>
+  <div class="nav-pill">AI for Bharat Hackathon 2026</div>
+  <div class="nav-aws"><div class="aws-dot"></div>Powered by AWS</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"><img src="fash_3.png" alt=""/></div>
+  <div class="hero-glow"></div>
+  <div class="hero-tag">AI-Powered Fashion Market Intelligence</div>
+  <h1 class="hero-h1">Validate Your Design.<br/><em>Before You Produce.</em></h1>
+  <p class="hero-p">Upload a fashion design image, describe it, or do both and discover similar market styles with AI-driven insights</p>
+  <div class="chips">
+    <div class="chip"><div class="cdot" style="background:var(--lime)"></div>Multimodality</div>
+    <div class="chip"><div class="cdot" style="background:var(--purple)"></div>Style Matching</div>
+    <div class="chip"><div class="cdot" style="background:var(--orange)"></div>Design Matching</div>
+    <div class="chip"><div class="cdot" style="background:var(--teal)"></div>Pattern Detection</div>
+    <div class="chip"><div class="cdot" style="background:var(--red)"></div>Trend Analysis</div>
+    <div class="chip"><div class="cdot" style="background:var(--gold)"></div>5,000 Market Designs</div>
+  </div>
+</div>
+
+<div class="runway"></div>
+
+<main>
+  <div class="slabel"><div class="snum">1</div><div class="stxt">Upload Your Fashion Designs</div></div>
+
+  <div class="ugrid">
+    <!-- DESIGN 01 -->
+    <div class="ucard" id="c1">
+      <div class="ucard-hd">
+        <span class="ucard-num">DESIGN 01</span>
+      </div>
+      <button class="btn-remove" id="rm1" onclick="removeImage(1,event)" title="Remove image">✕</button>
+      <div class="uarea" id="a1">
+        <div class="uicon" onclick="triggerUpload(1,event)"><img src="fash_1.png" alt="Design 01"/></div>
+        <div class="utxt">Upload Design</div>
+        <div class="uhint">PNG, JPG, WEBP — any size</div>
+      </div>
+      <input type="file" id="f1" accept="image/*" onchange="upload(1,this)"/>
+    </div>
+    <!-- DESIGN 02 -->
+    <div class="ucard" id="c2">
+      <div class="ucard-hd">
+        <span class="ucard-num">DESIGN 02</span>
+      </div>
+      <button class="btn-remove" id="rm2" onclick="removeImage(2,event)" title="Remove image">✕</button>
+      <div class="uarea" id="a2">
+        <div class="uicon" onclick="triggerUpload(2,event)"><img src="fash_2.png" alt="Design 02"/></div>
+        <div class="utxt">Upload Design</div>
+        <div class="uhint">Optional — upload for collection comparison</div>
+      </div>
+      <input type="file" id="f2" accept="image/*" onchange="upload(2,this)"/>
+    </div>
+  </div>
+
+  <div class="drow">
+    <div><label class="dlbl" for="d1">Describe Design 01</label><input class="dinp" id="d1" type="text" placeholder="e.g. sage green corset mini dress..." oninput="updateGoBtn()"/></div>
+    <div><label class="dlbl" for="d2">Describe Design 02 (optional)</label><input class="dinp" id="d2" type="text" placeholder="e.g. floral midi with puff sleeves..." oninput="updateGoBtn()"/></div>
+  </div>
+
+  <div class="arow">
+    <button class="btn-go" id="goBtn" onclick="analyse()" disabled>✦ &nbsp;Analyse Designs</button>
+    <button class="btn-cl" onclick="reset()">Clear All</button>
+  </div>
+
+  <div class="lbar" id="lbar"><div class="lbar-i"></div></div>
+  <div class="err" id="errBox"></div>
+
+  <div class="lstate" id="lstate">
+    <div class="lspin"><img src="loading.png" alt="Analysing" style="width:60px;height:60px;object-fit:cover;border-radius:50%"/></div>
+    <div class="lmsg">Analysing your design...</div>
+    <div class="lsub">FINDING SIMILAR STYLES IN THE MARKET</div>
+    <div class="lfashion-dots"><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="res">
+    <div class="slabel" id="matchesAnchor" style="margin-top:4px"><div class="snum">1</div><div class="stxt" id="matchesLabel">Top Market Matches</div></div>
+    <div id="matchesSection"></div>
+
+    <div class="slabel"><div class="snum">2</div><div class="stxt">Market Overview</div></div>
+    <div class="mgrid" id="mg"></div>
+
+    <div id="vaLabel" style="display:none"></div>
+    <div id="vaSection" style="display:none"></div>
+
+    <div class="slabel"><div class="snum">3</div><div class="stxt">AI Market Intelligence</div></div>
+    <div id="mrSection" style="margin-bottom:24px"></div>
+    <div class="ipanel">
+      <div class="ihd">
+        <div class="iicon" id="iicon"><img src="market.png" alt="Market" style="width:100%;height:100%;object-fit:cover;border-radius:12px"/></div>
+        <div>
+          <div class="ititle" id="ititle">Market Intelligence Report</div>
+          <div class="isub" id="isub">POWERED BY AMAZON BEDROCK — GEMMA 3 27B</div>
+        </div>
+      </div>
+      <div id="ic"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="fl">FASHAI — Fashion Design Intelligence &nbsp;/&nbsp; <span>Team Cool Coder Pro</span> &nbsp;/&nbsp; AI for Bharat 2026</div>
+  <div class="fr">
+    <div class="fc">Bedrock</div><div class="fc">Rekognition</div><div class="fc">OpenSearch</div><div class="fc">Lambda</div><div class="fc">S3</div><div class="fc">API Gateway</div>
+  </div>
+</footer>
+
+<script>
+const API = 'https://zoj5q2z9hj.execute-api.ap-south-1.amazonaws.com/prod/search';
+let up = {1:null, 2:null};
+
+// ── IMAGE COMPRESSION ────────────────────────────────────────────────────────
+function compressImage(dataUrl, maxPx=800, quality=0.82) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > h && w > maxPx) { h = Math.round(h * maxPx / w); w = maxPx; }
+      else if (h > maxPx) { w = Math.round(w * maxPx / h); h = maxPx; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+}
+
+// ── UPLOAD ───────────────────────────────────────────────────────────────────
+function triggerUpload(n, e) {
+  // Don't trigger if click came from remove button
+  if (e.target.closest('.btn-remove')) return;
+  document.getElementById('f'+n).click();
+}
+
+function upload(n, inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  const area = document.getElementById('a'+n);
+  // Show preview instantly
+  area.innerHTML = `<img class="uprev" src="${URL.createObjectURL(f)}"/>`;
+  document.getElementById('c'+n).classList.add('filled');
+
+  // Compress in background
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const compressed = await compressImage(e.target.result);
+    up[n] = { b64: compressed.split(',')[1], name: f.name };
+    updateGoBtn();
+  };
+  reader.readAsDataURL(f);
+}
+
+function updateGoBtn() {
+  const hasImage = !!up[1];
+  const hasText = document.getElementById('d1').value.trim().length > 0;
+  document.getElementById('goBtn').disabled = !(hasImage || hasText);
+}
+
+function removeImage(n, e) {
+  e.stopPropagation();
+  up[n] = null;
+  const area = document.getElementById('a'+n);
+  const icons = {1:'fash_1.png', 2:'fash_2.png'};
+  const hints = {1:'PNG, JPG, WEBP — any size', 2:'Optional — upload for collection comparison'};
+  area.innerHTML = `<div class="uicon" onclick="triggerUpload(${n},event)"><img src="${icons[n]}" alt="Design 0${n}"/></div><div class="utxt">Upload Design</div><div class="uhint">${hints[n]}</div>`;
+  document.getElementById('c'+n).classList.remove('filled');
+  document.getElementById('f'+n).value = '';
+  updateGoBtn();
+}
+
+function reset() {
+  [1,2].forEach(n => removeImage(n, {stopPropagation:()=>{}}));
+  document.getElementById('d1').value = '';
+  document.getElementById('d2').value = '';
+  document.getElementById('res').classList.remove('on');
+  document.getElementById('errBox').classList.remove('on');
+}
+
+// ── LOADING ──────────────────────────────────────────────────────────────────
+function setLoading(msg, sub) {
+  document.querySelector('.lmsg').textContent = msg;
+  document.querySelector('.lsub').textContent = sub;
+}
+
+// ── ANALYSE ──────────────────────────────────────────────────────────────────
+async function analyse() {
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true;
+  document.getElementById('lbar').classList.add('on');
+  document.getElementById('lstate').classList.add('on');
+  document.getElementById('res').classList.remove('on');
+  document.getElementById('errBox').classList.remove('on');
+
+  // Scroll down to loading state so user sees progress
+  setTimeout(() => {
+    document.getElementById('lstate').scrollIntoView({behavior:'smooth', block:'center'});
+  }, 150);
+
+  const has1 = up[1] || document.getElementById('d1').value.trim();
+  const has2 = up[2] || document.getElementById('d2').value.trim();
+  const isCompare = !!(has1 && has2);
+  const isTextOnly = !up[1] && document.getElementById('d1').value.trim();
+
+  try {
+    if (isCompare) {
+      await runComparePipeline();
+    } else {
+      await runSinglePipeline();
+    }
+  } catch(e) {
+    const b = document.getElementById('errBox');
+    b.textContent = '⚠ ' + e.message;
+    b.classList.add('on');
+  } finally {
+    document.getElementById('lbar').classList.remove('on');
+    document.getElementById('lstate').classList.remove('on');
+    btn.disabled = false;
+    updateGoBtn();
+  }
+}
+
+// ── SINGLE PIPELINE ──────────────────────────────────────────────────────────
+async function runSinglePipeline() {
+  const desc = document.getElementById('d1').value.trim();
+  const hasImage = !!up[1];
+
+  if (!hasImage && !desc) return;
+
+  const payload = {};
+  if (hasImage) payload.image = up[1].b64;
+  if (desc) payload.description = desc;
+
+  setLoading(
+    hasImage ? 'Analysing your design...' : 'Searching by description...',
+    hasImage ? 'FINDING SIMILAR STYLES IN THE MARKET' : 'MATCHING YOUR DESCRIPTION TO MARKET PRODUCTS'
+  );
+
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  });
+  setLoading('Almost there...', 'GENERATING MARKET INSIGHTS');
+  const d = await r.json();
+  if (d.error) throw new Error(d.error);
+  renderSingle(d);
+}
+
+// ── COMPARE PIPELINE ─────────────────────────────────────────────────────────
+async function runComparePipeline() {
+  setLoading('Comparing your designs...', 'SEARCHING MARKET FOR BOTH STYLES');
+
+  // Build payloads per design (image, image+text, or text-only)
+  const p1 = { mode: 'match_only' };
+  if (up[1]) p1.image = up[1].b64;
+  if (document.getElementById('d1').value.trim()) p1.description = document.getElementById('d1').value.trim();
+
+  const p2 = { mode: 'match_only' };
+  if (up[2]) p2.image = up[2].b64;
+  if (document.getElementById('d2').value.trim()) p2.description = document.getElementById('d2').value.trim();
+
+  // Fire both API calls in parallel
+  const [r1, r2] = await Promise.all([
+    fetch(API, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(p1) }),
+    fetch(API, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(p2) })
+  ]);
+
+  setLoading('Matches found...', 'RETRIEVING TOP DESIGNS');
+  const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
+  if (d1.error) throw new Error('Design 01: ' + d1.error);
+  if (d2.error) throw new Error('Design 02: ' + d2.error);
+
+  // Third call: generate comparison insights using both product sets
+  setLoading('Almost there...', 'GENERATING COLLECTION COMPARISON');
+  const insightsReq = await fetch(API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      image: up[1].b64,
+      description: document.getElementById('d1').value,
+      mode: 'compare_insights',
+      products1: d1.similar_products,
+      products2: d2.similar_products,
+      desc1: document.getElementById('d1').value,
+      desc2: document.getElementById('d2').value,
+    })
+  });
+  const insightsData = await insightsReq.json();
+  if (insightsData.error) throw new Error('Insights: ' + insightsData.error);
+
+  await sleep(300);
+  renderCompare(d1.similar_products || [], d2.similar_products || [], insightsData.insights || '');
+}
+
+// ── RENDER: SINGLE ────────────────────────────────────────────────────────────
+function renderSingle(d) {
+  const p = d.similar_products || [], ins = d.insights || '';
+  const vaHtml = renderVisualAttributes(d.visual_attributes, d.style_description);
+  document.getElementById('vaSection').innerHTML = vaHtml;
+  document.getElementById('vaLabel').style.display = vaHtml ? '' : 'none';
+  document.getElementById('mrSection').innerHTML = renderMarketReadiness(d.market_readiness);
+  const ap = (p.reduce((s,x)=>s+(x.price||0),0)/p.length).toFixed(0);
+  const parseRev = x => { const n = parseFloat(String(x.revenue??'').replace(/[$,]/g,'')); return (isNaN(n)||n===0) ? (parseFloat(x.price)||0)*(parseFloat(x.units_sold)||0) : n; };
+  const avgRev = p.reduce((s,x)=>s+parseRev(x),0)/p.length;
+  const avgRevFmt = avgRev>=1000 ? `$${(avgRev/1000).toFixed(1)}k` : `$${avgRev.toFixed(0)}`;
+  const avgVel = (p.reduce((s,x)=>s+((parseFloat(x.units_sold)||0)/Math.max(parseFloat(x.days_listed)||1,1)),0)/p.length).toFixed(1);
+  const avgRating = (p.reduce((s,x)=>s+(parseFloat(x.avg_rating)||0),0)/p.length).toFixed(1);
+  const rising = p.filter(x=>(x.sales_trend||'').toLowerCase().includes('rising')).length;
+  const stable = p.filter(x=>(x.sales_trend||'').toLowerCase().includes('stable')).length;
+  const falling = p.length - rising - stable;
+  const risingPct = Math.round(rising/p.length*100);
+  const stablePct = Math.round(stable/p.length*100);
+  const fallingPct = Math.round(falling/p.length*100);
+
+  document.getElementById('mg').innerHTML = `
+    <div class="mcard"><div class="mlbl">Avg Market Price</div><div class="mval">$${ap}</div><div class="msub">per similar design</div></div>
+    <div class="mcard"><div class="mlbl">Avg Revenue</div><div class="mval">${avgRevFmt}</div><div class="msub">per similar design</div></div>
+    <div class="mcard"><div class="mlbl">Sales Velocity</div><div class="mval">${avgVel}</div><div class="msub">units sold / day</div></div>
+    <div class="mcard"><div class="mlbl">Avg Rating</div><div class="mval">${avgRating}</div><div class="msub">out of 5.0</div></div>
+    <div class="mcard">
+      <div class="mlbl">Trend Breakdown</div>
+      <div class="tbar-row"><span class="tbar-lbl">↑ Rising</span><div class="tbar-track"><div class="tbar-fill" style="width:${risingPct}%;background:var(--lime)"></div></div><span class="tbar-pct">${risingPct}%</span></div>
+      <div class="tbar-row"><span class="tbar-lbl">→ Stable</span><div class="tbar-track"><div class="tbar-fill" style="width:${stablePct}%;background:var(--purple)"></div></div><span class="tbar-pct">${stablePct}%</span></div>
+      <div class="tbar-row"><span class="tbar-lbl">↓ Falling</span><div class="tbar-track"><div class="tbar-fill" style="width:${fallingPct}%;background:var(--red)"></div></div><span class="tbar-pct">${fallingPct}%</span></div>
+    </div>`;
+
+  document.getElementById('mg').className = 'mgrid';
+  document.getElementById('matchesLabel').textContent = 'Similar Designs';
+  document.getElementById('matchesSection').innerHTML = `
+    <div class="ptitle">Top Market Matches <span class="pcnt">${p.length} matches</span></div>
+    <div class="pgrid-wrap">
+      <button class="pscroll-btn left" onclick="document.getElementById('pgrid1').scrollLeft-=480">&lsaquo;</button>
+      <div class="pgrid" id="pgrid1">${p.map((x,i)=>productCard(x,i)).join('')}</div>
+      <button class="pscroll-btn right" onclick="document.getElementById('pgrid1').scrollLeft+=480">&rsaquo;</button>
+    </div>`;
+
+  document.getElementById('iicon').innerHTML = '<img src="market.png" alt="Market" style="width:100%;height:100%;object-fit:cover;border-radius:12px"/>';
+  document.getElementById('ititle').textContent = 'Market Analysis';
+  document.getElementById('isub').textContent = 'POWERED BY AMAZON BEDROCK — GEMMA 3 27B';
+  document.getElementById('ic').innerHTML = parseInsights(ins);
+
+  show();
+}
+
+// ── RENDER: COMPARE ───────────────────────────────────────────────────────────
+function renderCompare(p1, p2, ins) {
+  document.getElementById('vaSection').innerHTML = '';
+  document.getElementById('mrSection').innerHTML = '';
+  const parseRev = x => { const n = parseFloat(String(x.revenue??'').replace(/[$,]/g,'')); return (isNaN(n)||n===0) ? (parseFloat(x.price)||0)*(parseFloat(x.units_sold)||0) : n; };
+  const calcM = arr => {
+    const n = arr.length;
+    const r = arr.filter(x=>(x.sales_trend||'').toLowerCase().includes('rising')).length;
+    const s = arr.filter(x=>(x.sales_trend||'').toLowerCase().includes('stable')).length;
+    const f = n - r - s;
+    return {
+      ap:     (arr.reduce((s,x)=>s+(parseFloat(x.price)||0),0)/n).toFixed(0),
+      rev:    (v => v>=1000?`$${(v/1000).toFixed(1)}k`:`$${v.toFixed(0)}`)(arr.reduce((s,x)=>s+parseRev(x),0)/n),
+      vel:    (arr.reduce((s,x)=>s+((parseFloat(x.units_sold)||0)/Math.max(parseFloat(x.days_listed)||1,1)),0)/n).toFixed(1),
+      rating: (arr.reduce((s,x)=>s+(parseFloat(x.avg_rating)||0),0)/n).toFixed(1),
+      rPct: Math.round(r/n*100), sPct: Math.round(s/n*100), fPct: Math.round(f/n*100),
+    };
+  };
+  const m1 = calcM(p1), m2 = calcM(p2);
+
+  const mgEl = document.getElementById('mg');
+  mgEl.className = '';
+  mgEl.innerHTML = `
+    <div class="compare-mgrid">
+      <div>
+        <div class="compare-mcol-hd d1"><div class="design-dot" style="width:8px;height:8px;border-radius:50%;background:var(--lime)"></div>Design 01 — Market Snapshot</div>
+        <div class="compare-mcards">
+          <div class="cmcard c1"><div class="mlbl">Avg Price</div><div class="mval">$${m1.ap}</div><div class="msub">similar designs</div></div>
+          <div class="cmcard c1"><div class="mlbl">Avg Revenue</div><div class="mval">${m1.rev}</div><div class="msub">per design</div></div>
+          <div class="cmcard c1"><div class="mlbl">Sales Velocity</div><div class="mval">${m1.vel}</div><div class="msub">units / day</div></div>
+          <div class="cmcard c1"><div class="mlbl">Avg Rating</div><div class="mval">${m1.rating}</div><div class="msub">out of 5.0</div></div>
+        </div>
+        <div class="ctrend" style="margin-top:10px;margin-bottom:0">
+          <div class="mlbl" style="margin-bottom:10px">Trend Breakdown</div>
+          <div class="tbar-row"><span class="tbar-lbl">↑ Rising</span><div class="tbar-track"><div class="tbar-fill" style="width:${m1.rPct}%;background:var(--lime)"></div></div><span class="tbar-pct">${m1.rPct}%</span></div>
+          <div class="tbar-row"><span class="tbar-lbl">→ Stable</span><div class="tbar-track"><div class="tbar-fill" style="width:${m1.sPct}%;background:var(--purple)"></div></div><span class="tbar-pct">${m1.sPct}%</span></div>
+          <div class="tbar-row"><span class="tbar-lbl">↓ Falling</span><div class="tbar-track"><div class="tbar-fill" style="width:${m1.fPct}%;background:var(--red)"></div></div><span class="tbar-pct">${m1.fPct}%</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="compare-mcol-hd d2"><div class="design-dot" style="width:8px;height:8px;border-radius:50%;background:var(--purple)"></div>Design 02 — Market Snapshot</div>
+        <div class="compare-mcards">
+          <div class="cmcard c2"><div class="mlbl">Avg Price</div><div class="mval">$${m2.ap}</div><div class="msub">similar designs</div></div>
+          <div class="cmcard c2"><div class="mlbl">Avg Revenue</div><div class="mval">${m2.rev}</div><div class="msub">per design</div></div>
+          <div class="cmcard c2"><div class="mlbl">Sales Velocity</div><div class="mval">${m2.vel}</div><div class="msub">units / day</div></div>
+          <div class="cmcard c2"><div class="mlbl">Avg Rating</div><div class="mval">${m2.rating}</div><div class="msub">out of 5.0</div></div>
+        </div>
+        <div class="ctrend" style="margin-top:10px;margin-bottom:0">
+          <div class="mlbl" style="margin-bottom:10px">Trend Breakdown</div>
+          <div class="tbar-row"><span class="tbar-lbl">↑ Rising</span><div class="tbar-track"><div class="tbar-fill" style="width:${m2.rPct}%;background:var(--lime)"></div></div><span class="tbar-pct">${m2.rPct}%</span></div>
+          <div class="tbar-row"><span class="tbar-lbl">→ Stable</span><div class="tbar-track"><div class="tbar-fill" style="width:${m2.sPct}%;background:var(--purple)"></div></div><span class="tbar-pct">${m2.sPct}%</span></div>
+          <div class="tbar-row"><span class="tbar-lbl">↓ Falling</span><div class="tbar-track"><div class="tbar-fill" style="width:${m2.fPct}%;background:var(--red)"></div></div><span class="tbar-pct">${m2.fPct}%</span></div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('matchesLabel').textContent = 'Top Market Matches — Side by Side';
+  document.getElementById('matchesSection').innerHTML = `
+    <div class="compare-cols">
+      <div class="compare-col">
+        <div class="compare-col-hd d1">
+          <div class="col-label"><div class="design-dot"></div>Design 01</div>
+          <span class="col-cnt">${p1.length} matches</span>
+        </div>
+        ${p1.map((x,i) => compactCard(x,i)).join('')}
+      </div>
+      <div class="compare-col">
+        <div class="compare-col-hd d2">
+          <div class="col-label"><div class="design-dot"></div>Design 02</div>
+          <span class="col-cnt">${p2.length} matches</span>
+        </div>
+        ${p2.map((x,i) => compactCard(x,i)).join('')}
+      </div>
+    </div>`;
+
+  document.getElementById('iicon').innerHTML = '<img src="market.png" alt="Market" style="width:100%;height:100%;object-fit:cover;border-radius:12px"/>';
+  document.getElementById('ititle').textContent = 'Collection Comparison Report';
+  document.getElementById('isub').innerHTML = 'POWERED BY AMAZON BEDROCK — GEMMA 3 27B &nbsp;&nbsp; <span class="compare-badge">✦ COLLECTION ANALYSIS</span>';
+  document.getElementById('ic').innerHTML = parseInsights(ins);
+
+  show();
+}
+
+// ── CARD BUILDERS ─────────────────────────────────────────────────────────────
+function productCard(x, i) {
+  const tr = x.sales_trend?.toLowerCase()||'stable';
+  const ti = tr==='rising'?'↑':tr==='falling'?'↓':'→';
+  const sc = ((x.score||0)*100).toFixed(0);
+  const st = '★'.repeat(Math.round(x.avg_rating||0))+'☆'.repeat(5-Math.round(x.avg_rating||0));
+  return `<div class="pcard" onclick="openLightbox('${(x.image_url||'').replace(/'/g,"\\'")}','${(x.name||'').replace(/'/g,"\\'")}','${x.price||''}')">
+    <div class="pimg-w">
+      <div class="prank">#${i+1}</div>
+      ${x.image_url?`<img class="pimg" src="${x.image_url}" onerror="this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;height:100%;font-size:38px>👗</div>'">`:'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:38px">👗</div>'}
+    </div>
+    <div class="psbar"><div class="psfill" style="width:${sc}%"></div></div>
+    <div class="pinfo">
+      <div class="pname">${x.name||'Unknown'}</div>
+      <div class="pprice">$${x.price||'—'}</div>
+      <div class="ptags">
+        <span class="ptag t-n">${(x.clothing_niche||'').substring(0,14)}</span>
+        <span class="ptag t-${tr}">${ti} ${tr}</span>
+      </div>
+      <div class="prat"><span class="stars">${st}</span><span class="rnum">${x.avg_rating||'—'}</span></div>
+    </div>
+  </div>`;
+}
+
+function compactCard(x, i) {
+  const sc = ((x.score||0)*100).toFixed(0);
+  return `<div class="cpcard" onclick="openLightbox('${(x.image_url||'').replace(/'/g,"\\'")}','${(x.name||'').replace(/'/g,"\\'")}','${x.price||''}')">
+    <div class="cpimg-w">
+      <div class="cprank">#${i+1}</div>
+      ${x.image_url?`<img class="cpimg" src="${x.image_url}" onerror="this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;height:100%;font-size:26px>👗</div>'">`:'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:26px">👗</div>'}
+    </div>
+    <div class="cpinfo">
+      <div class="cpname">${x.name||'Unknown'}</div>
+      <div class="cpbottom">
+        <span class="cpprice">$${x.price||'—'}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── VISUAL ATTRIBUTES RENDERER ────────────────────────────────────────────────
+function renderVisualAttributes(attrs, styleDesc) {
+  const hasAttrs = attrs && attrs.length;
+  const hasDesc = styleDesc && styleDesc.trim();
+  if (!hasAttrs && !hasDesc) return '';
+
+  const catMeta = {
+    garment_type: { label: 'Garment Type', cls: 'va-garment' },
+    pattern:      { label: 'Pattern',      cls: 'va-pattern' },
+    fabric:       { label: 'Fabric',       cls: 'va-fabric' },
+    detail:       { label: 'Details',      cls: 'va-detail' }
+  };
+  const order = ['garment_type','pattern','fabric','detail'];
+
+  // Group Rekognition labels by category
+  let groupsHtml = '';
+  if (hasAttrs) {
+    const grouped = {};
+    attrs.forEach(a => {
+      const cat = a.category || 'garment_type';
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(a);
+    });
+
+    let idx = 0;
+    order.forEach(cat => {
+      const items = grouped[cat];
+      if (!items || !items.length) return;
+      const meta = catMeta[cat] || { label: cat, cls: '' };
+      const chips = items.map(a => {
+        const delay = `style="animation-delay:${idx++ * 0.06}s"`;
+        return `<span class="va-chip ${meta.cls}" ${delay}>${a.label}<span class="va-conf">${a.confidence}%</span></span>`;
+      }).join('');
+      groupsHtml += `<div class="va-group"><div class="va-group-label">${meta.label}</div><div class="va-chips">${chips}</div></div>`;
+    });
+  }
+
+  // Style description from Gemma Vision
+  let descHtml = '';
+  if (hasDesc) {
+    descHtml = `<div class="va-style-desc"><div class="va-style-label">AI Style Caption</div>${styleDesc}</div>`;
+  }
+
+  return `<div class="va-section">
+    ${groupsHtml}
+    ${descHtml}
+  </div>`;
+}
+
+// ── MARKET READINESS GAUGE ────────────────────────────────────────────────────
+function renderMarketReadiness(data) {
+  if (!data) return '';
+  const score = data.score || 0;
+  const b = data.breakdown || {};
+  const color = score >= 70 ? 'var(--lime)' : score >= 40 ? 'var(--orange)' : 'var(--red)';
+  const label = score >= 70 ? 'STRONG' : score >= 40 ? 'MODERATE' : 'WEAK';
+  const r = 62;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (score / 100) * circ;
+
+  const barRow = (lbl, val, max, clr) =>
+    `<div class="mr-bar-row">
+      <span class="mr-bar-lbl">${lbl}</span>
+      <div class="mr-bar-track"><div class="mr-bar-fill" style="width:${(val/max)*100}%;background:${clr}"></div></div>
+      <span class="mr-bar-val">${val}/${max}</span>
+    </div>`;
+
+  return `<div class="mr-section">
+    <div class="mr-card">
+      <div class="mr-gauge">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="mr-gauge-bg" cx="70" cy="70" r="${r}"/>
+          <circle class="mr-gauge-fill" cx="70" cy="70" r="${r}"
+            stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="mr-score">
+          <div class="mr-score-num" style="color:${color}">${score}</div>
+          <div class="mr-score-lbl">${label}</div>
+        </div>
+      </div>
+      <div class="mr-details">
+        <div class="mr-title">Market Readiness Breakdown</div>
+        ${barRow('Trend Signal', b.trend||0, 25, 'var(--lime)')}
+        ${barRow('Price Fit', b.price||0, 25, 'var(--purple)')}
+        ${barRow('Validation', b.validation||0, 25, 'var(--orange)')}
+        ${barRow('Demand', b.demand||0, 25, 'var(--teal)')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── INSIGHTS PARSER ───────────────────────────────────────────────────────────
+function parseInsights(ins) {
+  const secs = ins.split('\n\n').filter(Boolean);
+  return secs.map(s => {
+    const lines = s.trim().split('\n');
+    const fl = lines[0];
+    const colonIdx = fl.indexOf(':');
+    const ht = colonIdx > 0 && colonIdx < 40;
+    const ttl = ht ? fl.substring(0, colonIdx).trim() : null;
+    const rest = ht ? fl.substring(colonIdx + 1).trim() : '';
+    const body = (rest + (lines.length > 1 ? (rest ? '\n' : '') + lines.slice(1).join('\n') : '')).trim() || fl;
+    let vc = '';
+    const tl = (ttl || '').toLowerCase();
+    const bl = body.toLowerCase();
+    if (tl.includes('verdict')) {
+      const collLine = body.split('\n').find(l => l.toLowerCase().startsWith('collection'));
+      const check = (collLine || body).toLowerCase();
+      if (check.includes('no go')) vc = 'vno';
+      else if (check.includes('caution')) vc = 'vwarn';
+      else if (check.includes('go')) vc = 'vgo';
+    } else if (tl.includes('entry barrier')) {
+      if (bl.includes('hard')) vc = 'vno';
+      else if (bl.includes('medium')) vc = 'vwarn';
+      else if (bl.includes('easy')) vc = 'vgo';
+    } else if (tl.includes('trend status')) {
+      if (bl.includes('rising')) vc = 'vgo';
+      else if (bl.includes('declin') || bl.includes('falling')) vc = 'vno';
+      else vc = 'vwarn';
+    }
+    return `<div class="isec ${vc}">${ttl?`<div class="isec-ttl">${ttl}</div>`:''}<div class="isec-body">${body}</div></div>`;
+  }).join('');
+}
+
+function show() {
+  document.getElementById('res').classList.add('on');
+  // Scroll so uploaded design + Top Market Matches both visible in one frame
+  setTimeout(() => {
+    const anchor = document.getElementById('matchesAnchor');
+    if (anchor) {
+      const rect = anchor.getBoundingClientRect();
+      const uploadCards = document.querySelector('.ucard');
+      const uploadTop = uploadCards ? uploadCards.getBoundingClientRect().top + window.scrollY : 0;
+      // Scroll to show upload cards at top with matches below
+      window.scrollTo({top: uploadTop - 10, behavior: 'smooth'});
+    }
+  }, 150);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ── LIGHTBOX ─────────────────────────────────────────────────────────────────
+function openLightbox(imgUrl, name, price) {
+  const lb = document.getElementById('lightbox');
+  lb.querySelector('.lightbox-inner').innerHTML = `
+    <div class="lb-close" onclick="closeLightbox(event)">✕</div>
+    ${price ? `<div class="lb-price">$${price}</div>` : ''}
+    <img src="${imgUrl}" alt="${name||''}" onerror="this.src='';this.alt='Image not available'"/>
+    ${name ? `<div class="lb-name">${name}</div>` : ''}`;
+  lb.classList.add('on');
+}
+function closeLightbox(e) {
+  e.stopPropagation();
+  document.getElementById('lightbox').classList.remove('on');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('on'); });
+</script>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner" onclick="event.stopPropagation()"></div>
+</div>
+</body>
+</html>

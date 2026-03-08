@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FASHAI — Process Flow Diagram</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9fa; padding: 40px; }
+
+  h1 { text-align: center; font-size: 28px; color: #1a1a2e; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #666; font-size: 14px; margin-bottom: 40px; }
+
+  /* ── Layout ── */
+  .diagram { max-width: 1100px; margin: 0 auto; }
+
+  .section { margin-bottom: 50px; }
+  .section-title {
+    font-size: 18px; font-weight: 700; color: #fff;
+    background: #1a1a2e; padding: 10px 20px; border-radius: 8px;
+    display: inline-block; margin-bottom: 20px;
+  }
+
+  /* ── Flow rows ── */
+  .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center; }
+
+  .box {
+    padding: 14px 18px; border-radius: 10px; text-align: center;
+    font-size: 13px; line-height: 1.5; min-width: 130px; max-width: 180px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .box-input { background: #e8f5e9; border: 2px solid #66bb6a; color: #2e7d32; font-weight: 600; }
+  .box-aws { background: #fff3e0; border: 2px solid #ff9800; color: #e65100; }
+  .box-process { background: #e3f2fd; border: 2px solid #42a5f5; color: #1565c0; }
+  .box-output { background: #f3e5f5; border: 2px solid #ab47bc; color: #6a1b9a; font-weight: 600; }
+  .box-store { background: #fce4ec; border: 2px solid #ef5350; color: #c62828; }
+  .box-model { background: #fff8e1; border: 2px solid #ffc107; color: #f57f17; }
+
+  .arrow {
+    font-size: 22px; color: #999; padding: 0 6px; flex-shrink: 0;
+  }
+  .arrow-down {
+    text-align: center; font-size: 22px; color: #999; padding: 8px 0; width: 100%;
+  }
+
+  /* ── Offline / Online split ── */
+  .split { display: flex; gap: 30px; }
+  .split-col {
+    flex: 1; background: #fff; border-radius: 12px;
+    padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .split-col h3 {
+    font-size: 15px; color: #1a1a2e; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 2px solid #eee;
+  }
+
+  .flow-vert { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+  .label { font-size: 11px; color: #888; margin-top: 2px; }
+
+  /* ── Three modes ── */
+  .modes { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+  .mode-box {
+    flex: 1; max-width: 320px; background: #fff; border-radius: 12px;
+    padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-top: 4px solid #42a5f5;
+  }
+  .mode-box h4 { font-size: 14px; color: #1565c0; margin-bottom: 10px; }
+  .mode-box ul { list-style: none; font-size: 12px; color: #444; }
+  .mode-box ul li { padding: 4px 0; padding-left: 16px; position: relative; }
+  .mode-box ul li::before { content: "→"; position: absolute; left: 0; color: #42a5f5; }
+
+  /* ── AWS badge ── */
+  .aws-badge {
+    display: inline-block; background: #232f3e; color: #ff9900;
+    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+    margin-left: 4px;
+  }
+
+  /* ── Compare section ── */
+  .compare-flow {
+    display: flex; align-items: flex-start; gap: 20px; justify-content: center;
+  }
+  .compare-col { text-align: center; }
+
+  .note { font-size: 11px; color: #888; text-align: center; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>FASHAI — Architecture & Process Flow</h1>
+<p class="subtitle">AI-Powered Fashion Market Intelligence | Powered by AWS</p>
+
+<div class="diagram">
+
+<!-- ═══════ SECTION 1: OFFLINE PREPROCESSING ═══════ -->
+<div class="section">
+  <div class="section-title">Phase 1: Offline Preprocessing (One-Time)</div>
+  <div class="flow-vert">
+    <div class="flow">
+      <div class="box box-store">Fashion Dataset<br><span class="label">5000 products from ASOS</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-process">Image Generator<br><span class="label">fash_img_generator.py</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-output">Enriched Product Cards<br><span class="label">Photo + metadata overlay<br>900x1080 PNG</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-aws">Amazon S3<br><span class="aws-badge">AWS</span><br><span class="label">cards/ + metadata JSON</span></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="flow">
+      <div class="box box-aws">S3: Card Image + Metadata<br><span class="label">per product</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-model">Amazon Titan<br><span class="aws-badge">Bedrock</span><br><span class="label">Hybrid embedding<br>inputImage + inputText</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-output">1024-dim Vector<br><span class="label">Visual + semantic<br>fused embedding</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-aws">OpenSearch Serverless<br><span class="aws-badge">AWS</span><br><span class="label">HNSW index<br>5000 vectors</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SECTION 2: THREE INPUT MODES ═══════ -->
+<div class="section">
+  <div class="section-title">Phase 2: Query Search (Multimodality)</div>
+  <p class="note" style="margin-bottom: 18px; font-size: 12px; color: #555;">
+    Every mode converts user input into a <strong>1024-dim query vector</strong> that matches the indexed product format.<br>
+    Gemma structures the query into: <em>Description · Color · Pattern · Material · Length · Sleeve · Silhouette · Niche · Occasion · Season · Style tags</em>
+  </p>
+  <div class="modes">
+
+    <!-- MODE A -->
+    <div class="mode-box">
+      <h4>Mode A: Image Only</h4>
+      <div style="font-size:12px; color:#444; line-height:1.8;">
+        <strong>Input:</strong> Upload fashion design image<br><br>
+
+        <strong>Step 1 →</strong> Rekognition extracts labels<br>
+        <span style="color:#888; font-size:11px;">(garment type, pattern, fabric — used for insights only, NOT in embedding)</span><br><br>
+
+        <strong>Step 2 →</strong> Gemma Vision analyses the image<br>
+        Extracts structured attributes in indexed format:<br>
+        <span style="font-size:11px; color:#888; display:block; margin: 4px 0 4px 12px; line-height:1.5; border-left: 2px solid #42a5f5; padding-left: 8px;">
+          Description: Black floral print long sleeve dress<br>
+          Color: Black · Pattern: Blue floral print<br>
+          Material: Silk · Length: Midi · Sleeve: Long sleeve<br>
+          Silhouette: A-line · Niche: Casual Wear<br>
+          Occasion: Daily · Season: Summer · Style tags: …
+        </span>
+
+        <strong>Step 3 →</strong> Titan Hybrid Embedding<br>
+        <span style="color:#888; font-size:11px;">
+          inputImage = uploaded photo<br>
+          inputText = Gemma structured output<br>
+          → 1024-dim query vector
+        </span>
+      </div>
+    </div>
+
+    <!-- MODE B -->
+    <div class="mode-box" style="border-top-color: #66bb6a;">
+      <h4 style="color: #2e7d32;">Mode B: Image + Text</h4>
+      <div style="font-size:12px; color:#444; line-height:1.8;">
+        <strong>Input:</strong> Upload image + describe intent<br>
+        <span style="color:#888; font-size:11px;">e.g. "Orange summer skirt with floral top"</span><br><br>
+
+        <strong>Step 1 →</strong> Rekognition extracts labels<br>
+        <span style="color:#888; font-size:11px;">(insights only, NOT in embedding)</span><br><br>
+
+        <strong>Step 2 →</strong> Gemma Vision analyses image + user description together<br>
+        Fuses visual analysis with user intent — user text steers ambiguous fields:<br>
+        <span style="font-size:11px; color:#888; display:block; margin: 4px 0 4px 12px; line-height:1.5; border-left: 2px solid #66bb6a; padding-left: 8px;">
+          Description: Orange floral sleeveless co-ord set<br>
+          Color: Orange ← user said "orange"<br>
+          Pattern: Floral print · Material: Cotton<br>
+          Length: Midi · Sleeve: Sleeveless<br>
+          Silhouette: A-line · Niche: Casual Wear · …
+        </span>
+
+        <strong>Step 3 →</strong> Titan Hybrid Embedding<br>
+        <span style="color:#888; font-size:11px;">
+          inputImage = uploaded photo<br>
+          inputText = Gemma fused output (user text is NOT added separately)<br>
+          → 1024-dim query vector
+        </span>
+      </div>
+    </div>
+
+    <!-- MODE C -->
+    <div class="mode-box" style="border-top-color: #ab47bc;">
+      <h4 style="color: #6a1b9a;">Mode C: Text Only</h4>
+      <div style="font-size:12px; color:#444; line-height:1.8;">
+        <strong>Input:</strong> Type description only (no image)<br>
+        <span style="color:#888; font-size:11px;">e.g. "red party dress"</span><br><br>
+
+        <strong>Step 1 →</strong> Gemma text-only imagines a full product listing<br>
+        Also classifies query as Generic or Detailed:<br>
+        <span style="font-size:11px; color:#888; display:block; margin: 4px 0 4px 12px; line-height:1.5; border-left: 2px solid #ab47bc; padding-left: 8px;">
+          Query type: Generic<br>
+          Color: Red · Pattern: None · Material: Satin<br>
+          Length: Mini · Sleeve: Sleeveless<br>
+          Silhouette: Bodycon · Niche: Party Wear · …
+        </span>
+
+        <strong>Step 2 →</strong> Titan Text-Only Embedding<br>
+        <span style="color:#888; font-size:11px;">
+          inputText = raw user text + Gemma structured output combined<br>
+          (raw text "red party dress" preserved as keyword safety net)<br>
+          → 1024-dim query vector
+        </span><br><br>
+
+        <strong>Step 3 →</strong> Search strategy depends on query type:<br>
+        <span style="color:#888; font-size:11px;">
+          Generic → kNN + BM25 keyword boost on niche, occasion, style tags<br>
+          Detailed → kNN only (BM25 skipped to avoid noise)
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════ SECTION 3: SEARCH & INTELLIGENCE PIPELINE ═══════ -->
+<div class="section">
+  <div class="section-title">Phase 3: Search & Intelligence Pipeline</div>
+  <div class="flow-vert">
+    <div class="flow">
+      <div class="box box-input">Query Vector<br><span class="label">1024-dim from user input</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-aws">OpenSearch<br><span class="aws-badge">AWS</span><br><span class="label">HNSW kNN search<br>Top 15 candidates</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-model">Cohere Rerank<br><span class="aws-badge">Bedrock</span><br><span class="label">Cross-encoder<br>re-ranking → Top 10</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-process">Market Readiness<br><span class="label">Score 0–100<br>Trend | Price | Validation | Demand</span></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="flow">
+      <div class="box box-model">Gemma 27B<br><span class="aws-badge">Bedrock</span><br><span class="label">Top 5 products → <br>7-section report</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-output" style="max-width: 280px;">AI Market Intelligence Report<br><span class="label">Trend Status | Recommended Price | Target Audience<br>Launch Timing | Market Entry | Batch Size<br><strong>GO / CAUTION / NO GO</strong></span></div>
+      <span class="arrow">→</span>
+      <div class="box box-input" style="max-width: 200px;">Frontend Display<br><span class="label">Product cards + Score gauge<br>+ Intelligence report</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SECTION 4: COMPARE MODE ═══════ -->
+<div class="section">
+  <div class="section-title">Phase 4: Compare Mode</div>
+  <div class="flow-vert">
+    <div class="flow">
+      <div class="box box-input">Design 01<br><span class="label">Image / Text / Both</span></div>
+      <span class="arrow" style="font-size: 16px;">── parallel ──</span>
+      <div class="box box-input">Design 02<br><span class="label">Image / Text / Both</span></div>
+    </div>
+    <div class="arrow-down">↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↓</div>
+    <div class="flow">
+      <div class="box box-process">Match Pipeline<br><span class="label">Search + Rerank<br>Top 10 matches each</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-model">Gemma 27B<br><span class="aws-badge">Bedrock</span><br><span class="label">6-section comparison<br>report</span></div>
+      <span class="arrow">→</span>
+      <div class="box box-output" style="max-width: 280px;">Collection Verdict<br><span class="label">Design 01: GO / CAUTION / NO GO<br>Design 02: GO / CAUTION / NO GO<br><strong>Collection as pair: verdict</strong></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ AWS SERVICES USED ═══════ -->
+<div class="section">
+  <div class="section-title">AWS Services</div>
+  <div class="flow" style="flex-wrap: wrap; gap: 12px; justify-content: center;">
+    <div class="box box-aws" style="min-width: 150px;">Amazon S3<br><span class="label">Product cards + metadata<br>+ embeddings</span></div>
+    <div class="box box-aws" style="min-width: 150px;">Amazon Bedrock<br><span class="label">Titan Embeddings<br>Gemma 27B LLM<br>Cohere Rerank</span></div>
+    <div class="box box-aws" style="min-width: 150px;">Amazon Rekognition<br><span class="label">DetectLabels<br>>90% confidence</span></div>
+    <div class="box box-aws" style="min-width: 150px;">OpenSearch Serverless<br><span class="label">HNSW vector search<br>5000 products indexed</span></div>
+    <div class="box box-aws" style="min-width: 150px;">AWS Lambda<br><span class="label">Serverless backend<br>All pipeline logic</span></div>
+    <div class="box box-aws" style="min-width: 150px;">API Gateway<br><span class="label">REST endpoint<br>Frontend → Lambda</span></div>
+    <div class="box box-aws" style="min-width: 150px;">AWS Amplify<br><span class="label">Frontend hosting<br>Static site deployment</span></div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
